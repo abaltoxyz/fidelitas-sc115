@@ -1,10 +1,10 @@
-﻿''' 
-AVANCE 2: Sistema de citas y facturación de clínica odontológica
+''' 
+PROYECTO FINAL: Sistema de citas y facturación de clínica odontológica
 Estudiante: K. Andrés Baltodano Ramírez
 Facultad de Ingeniería, Universidad Fidélitas
 SC-115: Programación Básica
-Profesores: Javier Montoya, Edward Jiménez
-Noviembre, 2025
+Profesores: Edward Jiménez, Mariela Ugalde
+Diciembre, 2025
 '''
 
 ''' 
@@ -54,6 +54,14 @@ def login():
     return acceso
 
 ''' 
+Función helper validadora: Minifunción para validar la entrada de datos.
+'''
+def validarTexto(texto): # Validar que los textos no estén vacío
+    if texto == "":
+        print("Este campo no puede estar vacío, por favor intente nuevamente")
+
+
+''' 
 Función/Módulo #1: Registro de clientes. Se registran los datos del cliente.
 '''
 def registroClientes(listaClientes):
@@ -63,20 +71,50 @@ def registroClientes(listaClientes):
     while True:
         if inputClientes == "0":
             break
-        if inputClientes == "1":
-            #recoger datos del cliente
+        if inputClientes == "1":            
+            # recoger datos del cliente, pero validar que tengan contenido antes de agregarlos
             nombreCliente = input("Escriba el nombre del cliente: ")
+            if nombreCliente == "":
+                validarTexto(nombreCliente)
+                break   
             cedulaCliente = input("Escriba la cédula del cliente: ")
+            if cedulaCliente == "":
+                validarTexto(cedulaCliente)
+                return
             celularCliente = input("Escriba el número de celular del cliente: ")
+            if celularCliente == "":
+                validarTexto(celularCliente)
+                return
             correoCliente = input("Escriba el correo electrónico del cliente: ")
+            if correoCliente == "":
+                validarTexto(correoCliente)
+                return
             direccionCliente = input("Escriba la dirección del cliente: ")
-            # concatenar datos de clientes en una nueva variable para agregar a la lista
-            nuevoCliente = "\nNombre: " + nombreCliente + " Cédula: " + cedulaCliente + " Celular: " + celularCliente + " Correo: " + correoCliente + " Dirección: " + direccionCliente
-            listaClientes += nuevoCliente
+            if direccionCliente =="":
+                validarTexto(direccionCliente)
+                return
+
+            # si no hay errores, almacenar datos en arreglo
+            cliente = []
+            cliente.append(nombreCliente) # [0] contendrá el nombre
+            cliente.append(cedulaCliente) # [1] contendrá la cédula
+            cliente.append(celularCliente) # [2] contendrá el celular
+            cliente.append(correoCliente) # [3] contendrá el correo
+            cliente.append(direccionCliente) # [4] contendrá la dirección
+            listaClientes.append(cliente)
+            
             # confirmar que el cliente ha sido registrado y sus datos guardados
-            print(f"Clientes registrados: {listaClientes}")
-            print("1. Registrar cliente | 0. Volver al menú anterior")
+            print("Cliente registrado: ",
+                  f"\nNombre: {nombreCliente}",
+                  f"| Cédula: {cedulaCliente}",
+                  f"| Celular: {celularCliente}",
+                  f"| Correo: {correoCliente}",
+                  f"| Dirección: {direccionCliente}")
+            print("1. Registrar otro cliente | 0. Volver al menú anterior")
             inputClientes = input("\nSeleccione una opción del menú: ")
+            if inputClientes == "":
+                validarTexto(inputClientes) # Validar que no esté vacío
+                break
     return listaClientes
 
 ''' 
@@ -98,6 +136,9 @@ def paquetes(paqueteSeleccionado, subtotalPaquetes):
         print(f"Paquetes disponibles:\n1. {paqueteClean} | Precio: ₡{precioClean}\n2. {paqueteSilver} | Precio: ₡{precioSilver}\n3. {paqueteGold} | Precio: ₡{precioGold}\n4. {paqueteDiamante} | Precio: ₡{precioDiamante}\n0. Volver al menú anterior")
         #print("Seleccione el paquete que desea comprar: 1. CLEAN | 2. SILVER | 3. GOLD | 4. DIAMANTE | 0. Volver al menú anterior")
         inputPaquete = input("\nSeleccione el paquete que desea comprar: ")
+        if inputPaquete == "":
+            validarTexto(inputPaquete) # Validar que no esté vacío
+            return
         # Salir del módulo
         if inputPaquete == "0":
             break
@@ -140,21 +181,22 @@ def citas(citaSeleccionada):
         print("\nConsulta de citas: seleccione una opción del menú")
         print(f"Citas disponibles:\n1. {citaManana}\n2. {citaTarde}\n3. {citaNoche}\n0. Volver al menú anterior")
         inputCita = input("\nSeleccione la cita que desea agendar: ")
-        # Salir del módulo
-        if inputCita == "0":
-            break
-        elif inputCita == "1":
+        if inputCita == "":
+            validarTexto(inputCita) # Validar que no esté vacío
+            return
+        if inputCita == "1": # Cita mañana
             citaSeleccionada = citaManana
-            # Confirmar selección de cita
             print(f"Cita seleccionada: {citaSeleccionada}.")
             break
-        elif inputCita == "2":
+        elif inputCita == "2": # Cita tarde
             citaSeleccionada = citaTarde
             print(f"Cita seleccionada: {citaSeleccionada}.")
             break
-        elif inputCita == "3":
+        elif inputCita == "3": # Cita noche
             citaSeleccionada = citaNoche
             print(f"Cita seleccionada: {citaSeleccionada}.")
+            break
+        elif inputCita == "0": # Salir del módulo
             break
         else:
             print("Opción no válida, por favor seleccione una opción del menú.")
@@ -187,10 +229,10 @@ def productos(productoSeleccionado, subtotalProductos):
         print(f"Productos disponibles:\n1. {valoracion} Precio: ₡{precioValoracion}\n2. {limpieza} Precio: ₡{precioLimpieza}\n3. {placas} Precio: ₡{precioPlacas}\n4. {blanqueamiento} Precio: ₡{precioBlanqueamiento}\n5. {calza} Precio: ₡{precioCalza}\n0. Volver al menú anterior")
         inputProducto = input("\nSeleccione el producto que desea comprar: ")
 
-        # Salir del módulo
-        if inputProducto == "0":
+        if inputProducto == "":
+            validarTexto(inputProducto) # Validar que no esté vacío
             break
-
+        
         elif inputProducto == "1": # Valoración
             # Omitir si la valoración ya fue agregada
             if valoracionAgregado:
@@ -232,9 +274,8 @@ def productos(productoSeleccionado, subtotalProductos):
             subtotalProductos += precioBlanqueamiento
             print(f"Producto seleccionado: \n{blanqueamiento} - Precio: ₡{precioBlanqueamiento}")
             print(f"--------PROFORMA-------- {productoSeleccionado} \nSubtotal: ₡{subtotalProductos}")
-        
-            # Calzas dentales: Único producto que puede ser agregado múltiples veces
-        elif inputProducto == "5":
+    
+        elif inputProducto == "5":  # Calzas dentales: Único producto que puede ser agregado múltiples veces
             cantidadCalzas = int(input("Ingrese la cantidad de calzas: "))
             # Validar que no se digite un número negativo o cero
             if cantidadCalzas <= 0:
@@ -244,6 +285,9 @@ def productos(productoSeleccionado, subtotalProductos):
             subtotalProductos += (cantidadCalzas * precioCalza)
             print(f"Producto seleccionado: \n{cantidadCalzas} {calza} - Precio: ₡{cantidadCalzas * precioCalza}")
             print(f"--------PROFORMA-------- {productoSeleccionado} \nSubtotal: ₡{subtotalProductos}")
+        
+        elif inputProducto == "0": # Salir del módulo
+            break
         else:
             print("Opción no válida, por favor seleccione una opción del menú.")
 
@@ -265,10 +309,14 @@ Función/Módulo #5: Historial. Se muestra información que se capuró en los m�
 '''
 def historial(listaClientes, paqueteSeleccionado, citaSeleccionada, productoSeleccionado, subtotalPaquetes, subtotalProductos):
     # Mostrar detalle de clientes
-    if listaClientes == "":
+    if len(listaClientes) == 0:
         print("Aún no hay clientes registrados.")
     else: 
-        print("Lista de clientes: ", listaClientes)
+        print("Lista de clientes: ")
+        for i in range(len(listaClientes)): # recorrer arreglo para mostrar los datos
+            print(f"[{i+1}]", "Nombre: ", listaClientes[i][0], # índices fijos definidos anteriormente: [0] nombre
+                "| Cédula: ", listaClientes[i][1], "| Celular: ", listaClientes[i][2], # [1] cédula, [2] celular
+                "| Correo: ", listaClientes[i][3],"| Dirección: ", listaClientes[i][4]) # [3] correo, [4] dirección
     
     # Mostrar detalle de paquetes
     if paqueteSeleccionado == "":
@@ -305,17 +353,39 @@ def historial(listaClientes, paqueteSeleccionado, citaSeleccionada, productoSele
 ''' 
 Función/Módulo #6: Facturación. Se muestra una factura con los datos del cliente y los productos/paquetes seleccionados.
 '''
-def facturar(paqueteSeleccionado, productoSeleccionado, subtotalPaquetes, subtotalProductos):
+def facturar(listaClientes, paqueteSeleccionado, productoSeleccionado, subtotalPaquetes, subtotalProductos):
     # Si no hay productos o paquetes seleccionados, no se puede facturar
     if paqueteSeleccionado == "" and productoSeleccionado == "":
         print("No hay productos o paquetes para facturar.")
-        return paqueteSeleccionado, productoSeleccionado, subtotalPaquetes, subtotalProductos
-    # Solicitar datos para facturación, podrían ser diferentes a los del cliente registrado
-    nombreCliente = input("Escriba nombre para facturación: ")
-    cedulaCliente = input("Escriba cédula para facturación: ")
-    correoCliente = input("Escriba correo electrónico para facturación: ")
+        return #paqueteSeleccionado, productoSeleccionado, subtotalPaquetes, subtotalProductos
+    
+    if len(listaClientes) == 0:
+        print("No hay clientes registrados para facturar. Registre un cliente primero y vuelva a intentar.")
+        return #paqueteSeleccionado, productoSeleccionado, subtotalPaquetes, subtotalProductos
+    
+    # Escoger cliente para facturar
+    print("Lista de clientes: ")
+    for i in range(len(listaClientes)):
+        print(f"ID [{i+1}]", "Nombre: ", listaClientes[i][0], # índices fijos definidos anteriormente: [0] nombre
+                "| Cédula: ", listaClientes[i][1], "| Celular: ", listaClientes[i][2], # [1] cédula, [2] celular
+                "| Correo: ", listaClientes[i][3],"| Dirección: ", listaClientes[i][4]) # [3] correo, [4] dirección
+
+    seleccionCliente = input("Seleccione el [ID] del cliente a facturar: ")
+    if seleccionCliente == "":
+        validarTexto(seleccionCliente)
+        return
+    indiceCliente = int(seleccionCliente) - 1 # Restar 1 para que concuerde con posición en arreglo
+    if indiceCliente < 0 or indiceCliente > len(listaClientes): # Validar que el ID corresponda a un cliente existente
+        print("El ID del cliente no existe, por favor intente nuevamente.")
+        return
+    
+    # Popular con datos existentes
+    nombreCliente = listaClientes[indiceCliente][0]
+    cedulaCliente = listaClientes[indiceCliente][1]
+    correoCliente = listaClientes[indiceCliente][3]
     # Consultar descuento a aplicar
     descuentoFactura = float(input("Descuento a aplicar (%): "))
+    print("--------------------------------")
     print("****FACTURA****")
     print("Cliente: ", nombreCliente)
     print("Cédula: ", cedulaCliente)    
@@ -337,6 +407,7 @@ def facturar(paqueteSeleccionado, productoSeleccionado, subtotalPaquetes, subtot
     totalPagar = subtotal - descuento + impuesto
     print(f"Total a pagar: ₡ {totalPagar:.2f}")
     print("****GRACIAS POR SU COMPRA****")
+    print("--------------------------------")
 
     return paqueteSeleccionado, productoSeleccionado, subtotalPaquetes, subtotalProductos
 
@@ -350,7 +421,7 @@ if login() == 1: #1: acceso concedido
     print("Bienvenido al sistema")
     
     # definir variables que pueden cambiar a lo largo del programa, para mostrarlas luego en el módulo de historial y facturación.
-    listaClientes = ""
+    listaClientes = [] # arreglo para almacenar clientes
     paqueteSeleccionado = ""
     citaSeleccionada = ""
     productoSeleccionado = ""
@@ -361,28 +432,28 @@ if login() == 1: #1: acceso concedido
         print("\nMenú principal")    
         print("1. Registro de clientes | 2. Paquetes | 3. Citas | 4. Productos | 5. Historial | 6. Facturar | 0. Salir del programa")
         inputMenu = input("\nSeleccione una opción del menú: ")
-        #Módulo: Registro de clientes
-        if inputMenu == "1":
+        
+        if inputMenu == "1": # Módulo 1: Registro de clientes
             listaClientes = registroClientes(listaClientes)
-        #Módulo:Paquetes
-        elif inputMenu == "2":
+        
+        elif inputMenu == "2": # Módulo 2: Paquetes
             paqueteSeleccionado, subtotalPaquetes = paquetes(paqueteSeleccionado, subtotalPaquetes)
-        #Módulo:Citas
-        elif inputMenu == "3":
+        
+        elif inputMenu == "3": # Módulo 3: Citas
             citaSeleccionada = citas(citaSeleccionada)
-        #Módulo:Productos
-        elif inputMenu == "4":
+        
+        elif inputMenu == "4": # Módulo 4: Productos
             productoSeleccionado, subtotalProductos = productos(productoSeleccionado, subtotalProductos)
-        #Módulo:Historial
-        elif inputMenu == "5":
-            listaClientes, paqueteSeleccionado, citaSeleccionada, productoSeleccionado, subtotalPaquetes, subtotalProductos = historial(listaClientes, paqueteSeleccionado, citaSeleccionada, productoSeleccionado, subtotalPaquetes, subtotalProductos)
-        #Módulo:Facturar
-        elif inputMenu == "6":
-            paqueteSeleccionado, productoSeleccionado, subtotalPaquetes, subtotalProductos = facturar(paqueteSeleccionado, productoSeleccionado, subtotalPaquetes, subtotalProductos)
-        #Salir del programa
-        elif inputMenu == "0":
+        
+        elif inputMenu == "5": # Módulo 5: Historial
+            historial(listaClientes, paqueteSeleccionado, citaSeleccionada, productoSeleccionado, subtotalPaquetes, subtotalProductos)
+        
+        elif inputMenu == "6": # Módulo 6: Facturar
+            facturar(listaClientes, paqueteSeleccionado, productoSeleccionado, subtotalPaquetes, subtotalProductos)
+        
+        elif inputMenu == "0": # Salir del programa
             print("Gracias por usar el sistema. Hasta la próxima. ")
             break
-        #Validar opción seleccionada
-        else:
+        
+        else: #Validar opción seleccionada
             print("Opción no válida, por favor seleccione una opción del menú.")
